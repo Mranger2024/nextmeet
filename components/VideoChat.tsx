@@ -216,22 +216,24 @@ const VideoChat = () => {
 
   useEffect(() => {
     if (remoteVideoRef.current && remoteStream) {
+      const videoElement = remoteVideoRef.current;
       console.log('Setting remote video stream to video element')
-      remoteVideoRef.current.srcObject = remoteStream
+      videoElement.srcObject = remoteStream
       // Ensure video plays automatically
-      remoteVideoRef.current.play().catch(err => {
+      videoElement.play().catch(err => {
         console.error('Error playing remote video:', err)
         // Retry play on user interaction
         const playOnInteraction = () => {
-          remoteVideoRef.current?.play()
+          videoElement?.play()
           document.removeEventListener('click', playOnInteraction)
         }
         document.addEventListener('click', playOnInteraction)
       })
     }
     return () => {
-      if (remoteVideoRef.current) {
-        remoteVideoRef.current.srcObject = null
+      const videoElement = remoteVideoRef.current;
+      if (videoElement) {
+        videoElement.srcObject = null
       }
     }
   }, [remoteStream])
